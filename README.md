@@ -15,8 +15,8 @@ Cel konfiguracji:
 - główny model: `qwen3:14b-ctx131072` (bazowy `qwen3:14b` z `num_ctx 131072`)
 - model do kodu dostępny w katalogu providera: `deepseek-coder-v2:16b`
 - szybki model pomocniczy: `qwen2.5:7b`
-- `model.context_length: 64000` — override dla głównego modelu (wymóg Hermesa)
-- `auxiliary.compression.context_length: 64000` — override dla modelu kompresji
+- `model.context_length: 81920` — override dla głównego modelu (wymóg Hermesa)
+- `auxiliary.compression.context_length: 81920` — override dla modelu kompresji
 - MCP: filesystem, fetch, git, sqlite
 - sqlite MCP działa w osobnym venv, bez systemowego `pip install`
 
@@ -27,8 +27,8 @@ Sprawdzone na tym systemie:
 - Ollama API działa
 - Główny model: `qwen3:14b-ctx131072` (num_ctx: 131072)
 - Hermes config wskazuje na `ollama-launch`
-- `model.context_length: 64000` override dla głównego modelu
-- `auxiliary.compression.context_length: 64000` override dla kompresji
+- `model.context_length: 81920` override dla głównego modelu
+- `auxiliary.compression.context_length: 81920` override dla kompresji
 - `mcp` jest zainstalowane w venv Hermesa
 - `hermes mcp list` widzi: `filesystem`, `fetch`, `git`, `sqlite`
 - `hermes mcp test filesystem/fetch/git/sqlite` przechodzi poprawnie
@@ -178,10 +178,10 @@ Konfiguruje:
 - `model.provider = ollama-launch`
 - `model.default = qwen3:14b-ctx131072`
 - `model.base_url = http://127.0.0.1:11434/v1`
-- `model.context_length = 64000`
+- `model.context_length = 81920`
 - `delegation` na lokalne Ollama
 - `auxiliary.compression/session_search/mcp/title_generation` na lokalne Ollama
-- `auxiliary.compression.context_length = 64000`
+- `auxiliary.compression.context_length = 81920`
 - `mcp_servers.fetch`
 - `mcp_servers.filesystem`
 - `mcp_servers.git`

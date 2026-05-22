@@ -79,14 +79,14 @@ except Exception as exc:
 path = Path(config_path)
 cfg = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
 
-# Model główny — context_length override na 64K (minimum Hermesa)
+# Model główny — context_length override (dla qwen3 z num_ctx 131072, 16GB VRAM: 81920)
 cfg.setdefault("model", {})
 cfg["model"].update({
     "provider": provider_name,
     "base_url": ollama_base_url,
     "api_key": "ollama",
     "api_mode": "chat_completions",
-    "context_length": 64000,
+    "context_length": 81920,
     "default": main_model,
 })
 
@@ -137,7 +137,7 @@ for key, model in aux_models.items():
 
 # Model kompresji wymaga 64K context minimum — override dla modeli z <64K
 cfg["auxiliary"].setdefault("compression", {})
-cfg["auxiliary"]["compression"]["context_length"] = 64000
+cfg["auxiliary"]["compression"]["context_length"] = 81920
 
 # MCP serwery
 cfg["mcp_servers"] = {
