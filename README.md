@@ -5,7 +5,7 @@ Ten katalog służy do odtworzenia lokalnego setupu Ollama + Hermes Agent po rei
 Katalog roboczy:
 
 ```text
-/home/msx/ollama-setup/
+$HOME/ollama-setup/
 ```
 
 Cel konfiguracji:
@@ -38,7 +38,7 @@ Uwaga: `kimi-k2.6:cloud` może być nadal widoczny w samej Ollamie, ale został 
 ## Struktura katalogu
 
 ```text
-/home/msx/ollama-setup/
+$HOME/ollama-setup/
 ├── README.md
 ├── AGENTS.md                        # globalny plik agenta (dev/devops/shell/security/debug)
 ├── 01_setup_ollama_gpu.sh           # systemd GPU override dla Ollamy
@@ -90,20 +90,20 @@ curl -fsSL https://ollama.com/install.sh | sh
 #    cp /ścieżka/do/backupu/.env ~/.hermes/.env
 
 # 4. GPU + systemd (opcjonalnie, jeśli używasz usługi systemd)
-sudo chmod +x /home/msx/ollama-setup/01_setup_ollama_gpu.sh
-sudo /home/msx/ollama-setup/01_setup_ollama_gpu.sh
+sudo chmod +x $HOME/ollama-setup/01_setup_ollama_gpu.sh
+sudo $HOME/ollama-setup/01_setup_ollama_gpu.sh
 
 # 5. Zainstaluj MCP zależności
-chmod +x /home/msx/ollama-setup/02_install_mcp_servers.sh
-/home/msx/ollama-setup/02_install_mcp_servers.sh
+chmod +x $HOME/ollama-setup/02_install_mcp_servers.sh
+$HOME/ollama-setup/02_install_mcp_servers.sh
 
 # 6. Pull modeli bazowych + utwórz modele z większym kontekstem
-chmod +x /home/msx/ollama-setup/05_restore_models.sh
-/home/msx/ollama-setup/05_restore_models.sh
+chmod +x $HOME/ollama-setup/05_restore_models.sh
+$HOME/ollama-setup/05_restore_models.sh
 
 # 7. Skonfiguruj Hermes pod lokalne modele (jeśli nie przywróciłeś config.yaml z backupu)
-chmod +x /home/msx/ollama-setup/03_add_mcp_to_hermes.sh
-/home/msx/ollama-setup/03_add_mcp_to_hermes.sh
+chmod +x $HOME/ollama-setup/03_add_mcp_to_hermes.sh
+$HOME/ollama-setup/03_add_mcp_to_hermes.sh
 
 # 8. Weryfikacja
 hermes mcp list
@@ -128,7 +128,7 @@ Skrypt zapisuje override systemd dla usługi `ollama`:
 Uruchamiaj tylko wtedy, gdy Ollama działa jako usługa systemd:
 
 ```bash
-sudo /home/msx/ollama-setup/01_setup_ollama_gpu.sh
+sudo $HOME/ollama-setup/01_setup_ollama_gpu.sh
 ```
 
 Jeśli Ollama działa jako zwykły proces użytkownika, ten skrypt może nie być potrzebny.
@@ -147,7 +147,7 @@ journalctl -u ollama --no-pager -n 80 | grep -i "offloading\|CUDA\|GPU" || true
 Skrypt:
 
 - sprawdza, czy pakiety npm istnieją, zanim cokolwiek instaluje
-- przygotowuje venv: `/home/msx/ollama-setup/venvs/mcp-sqlite`
+- przygotowuje venv: `$HOME/ollama-setup/venvs/mcp-sqlite`
 - instaluje/aktualizuje `mcp` i `mcp-server-sqlite` w tym venv
 - nie modyfikuje `~/.hermes/config.yaml`
 
@@ -166,7 +166,7 @@ Celowo nie używamy tych nazw, bo potrafią dawać 404 w npm:
 Uruchomienie:
 
 ```bash
-/home/msx/ollama-setup/02_install_mcp_servers.sh
+$HOME/ollama-setup/02_install_mcp_servers.sh
 ```
 
 ## 03_add_mcp_to_hermes.sh
@@ -190,15 +190,15 @@ Konfiguruje:
 Uruchomienie:
 
 ```bash
-/home/msx/ollama-setup/03_add_mcp_to_hermes.sh
+$HOME/ollama-setup/03_add_mcp_to_hermes.sh
 ```
 
-Domyślny zakres filesystem MCP to `$HOME`, czyli zwykle `/home/msx`.
+Domyślny zakres filesystem MCP to `$HOME`.
 
 Możesz zawęzić zakres tak:
 
 ```bash
-FILESYSTEM_SCOPE=/home/msx/EasyRobots /home/msx/ollama-setup/03_add_mcp_to_hermes.sh
+FILESYSTEM_SCOPE=$HOME/EasyRobots $HOME/ollama-setup/03_add_mcp_to_hermes.sh
 ```
 
 ## 04_copy_agents_md.sh
@@ -207,10 +207,10 @@ Kopiuje `AGENTS.md` z katalogu projektu do `~/.config/agents/AGENTS.md` (central
 
 ```bash
 # z bieżącego katalogu
-/home/msx/ollama-setup/04_copy_agents_md.sh
+$HOME/ollama-setup/04_copy_agents_md.sh
 
 # z konkretnego projektu
-/home/msx/ollama-setup/04_copy_agents_md.sh /home/msx/WebProjects/mmis2
+$HOME/ollama-setup/04_copy_agents_md.sh $HOME/WebProjects/mmis2
 ```
 
 ## 05_restore_models.sh
@@ -218,7 +218,7 @@ Kopiuje `AGENTS.md` z katalogu projektu do `~/.config/agents/AGENTS.md` (central
 Pulluje bazowe modele z Ollama Registry i tworzy warianty z większym kontekstem z modelfiles. Idempotentny — pomija modele, które już istnieją.
 
 ```bash
-/home/msx/ollama-setup/05_restore_models.sh
+$HOME/ollama-setup/05_restore_models.sh
 ```
 
 Pullowane modele: `qwen3:14b`, `deepseek-coder-v2:16b`, `qwen2.5:7b`, `gemma4:latest`
@@ -230,7 +230,7 @@ Możesz też wskazać inne modele:
 MAIN_MODEL=qwen3:14b-ctx131072 \
 FAST_MODEL=qwen2.5:7b \
 CODING_MODEL=deepseek-coder-v2:16b-ctx65536 \
-/home/msx/ollama-setup/03_add_mcp_to_hermes.sh
+$HOME/ollama-setup/03_add_mcp_to_hermes.sh
 ```
 
 ## Sprawdzenie konfiguracji Hermesa
@@ -253,7 +253,7 @@ hermes chat -q "Jakiego modelu i providera używasz? Odpowiedz krótko."
 Test narzędzi po restarcie:
 
 ```bash
-hermes chat -q "Użyj narzędzi, żeby wypisać pliki w /home/msx/EasyRobots i krótko podsumuj strukturę."
+hermes chat -q "Użyj narzędzi, żeby wypisać pliki w $HOME/EasyRobots i krótko podsumuj strukturę."
 ```
 
 ## Modele i Modelfile
@@ -263,13 +263,13 @@ W katalogu `modelfiles/` są przykładowe Modelfile dla większego kontekstu.
 ### qwen3:14b-ctx131072 (aktualnie używany)
 
 ```bash
-ollama create qwen3:14b-ctx131072 -f /home/msx/ollama-setup/modelfiles/qwen3-14b.ctx131072.modelfile
+ollama create qwen3:14b-ctx131072 -f $HOME/ollama-setup/modelfiles/qwen3-14b.ctx131072.modelfile
 ```
 
 ### deepseek-coder-v2:16b-ctx65536
 
 ```bash
-ollama create deepseek-coder-v2:16b-ctx65536 -f /home/msx/ollama-setup/modelfiles/deepseek-coder-v2.ctx65536.modelfile
+ollama create deepseek-coder-v2:16b-ctx65536 -f $HOME/ollama-setup/modelfiles/deepseek-coder-v2.ctx65536.modelfile
 ```
 
 Uwaga: większy kontekst mocno zwiększa zużycie VRAM/RAM. Dla stabilnej pracy agentowej zacznij od standardowych modeli `qwen3:14b` i `deepseek-coder-v2:16b`.
@@ -281,7 +281,7 @@ Uwaga: większy kontekst mocno zwiększa zużycie VRAM/RAM. Dla stabilnej pracy 
 1. Sprawdź, czy pakiet `mcp` jest w venv Hermesa:
 
 ```bash
-/home/msx/.hermes/hermes-agent/venv/bin/python -c "import mcp; print('mcp ok')"
+$HOME/.hermes/hermes-agent/venv/bin/python -c "import mcp; print('mcp ok')"
 ```
 
 2. Sprawdź listę MCP:
@@ -307,7 +307,7 @@ npm view @cyanheads/git-mcp-server version
 Nie instaluj `mcp-server-sqlite` systemowym pipem. Użyj venv tworzonego przez:
 
 ```bash
-/home/msx/ollama-setup/02_install_mcp_servers.sh
+$HOME/ollama-setup/02_install_mcp_servers.sh
 ```
 
 ### Web search w Hermes doctor pokazuje ostrzeżenia
@@ -321,28 +321,28 @@ Filesystem MCP daje Hermesowi dostęp do katalogu ustawionego w `FILESYSTEM_SCOP
 Domyślnie:
 
 ```text
-/home/msx
+$HOME
 ```
 
 Bezpieczniej można zawęzić do projektu:
 
 ```bash
-FILESYSTEM_SCOPE=/home/msx/EasyRobots /home/msx/ollama-setup/03_add_mcp_to_hermes.sh
+FILESYSTEM_SCOPE=$HOME/EasyRobots $HOME/ollama-setup/03_add_mcp_to_hermes.sh
 ```
 
 ## Co warto backupować
 
-- `/home/msx/ollama-setup/`
-- `/home/msx/.hermes/config.yaml`
-- `/home/msx/.hermes/.env`
+- `$HOME/ollama-setup/`
+- `$HOME/.hermes/config.yaml`
+- `$HOME/.hermes/.env`
 - `/mnt/Working/OllamaModels/` albo lista modeli z `ollama list`
 
 ## Finalna checklista
 
 - [ ] Ollama działa: `curl -s http://127.0.0.1:11434/api/tags`
 - [ ] `qwen3:14b-ctx131072` jest dostępny: `ollama list | grep qwen3`
-- [ ] sqlite MCP venv istnieje: `/home/msx/ollama-setup/venvs/mcp-sqlite/bin/mcp-server-sqlite`
-- [ ] Hermes ma `mcp`: `/home/msx/.hermes/hermes-agent/venv/bin/python -c "import mcp"`
+- [ ] sqlite MCP venv istnieje: `$HOME/ollama-setup/venvs/mcp-sqlite/bin/mcp-server-sqlite`
+- [ ] Hermes ma `mcp`: `$HOME/.hermes/hermes-agent/venv/bin/python -c "import mcp"`
 - [ ] `hermes mcp list` pokazuje 4 serwery
 - [ ] `hermes mcp test ...` przechodzi dla wszystkich serwerów
 - [ ] Hermes został zrestartowany po zmianach

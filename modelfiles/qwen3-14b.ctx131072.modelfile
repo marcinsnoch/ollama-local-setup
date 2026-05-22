@@ -1,0 +1,17 @@
+FROM qwen3:14b
+
+# Kontekst: 40960 -> 131072 (maks dla qwen3). Więcej kontekstu = większe zużycie VRAM.
+PARAMETER num_ctx 131072
+
+# Parametry generowania
+PARAMETER temperature 0.7
+PARAMETER top_p 0.95
+PARAMETER top_k 20
+PARAMETER repeat_penalty 1.05
+PARAMETER num_predict 4096
+
+# Stop tokens
+PARAMETER stop "<|im_start|>"
+PARAMETER stop "<|im_end|>"
+
+SYSTEM Jesteś pomocnym asystentem AI. Odpowiadasz po polsku, chyba że użytkownik pisze w innym języku. Jesteś precyzyjny, konkretny i techniczny.
