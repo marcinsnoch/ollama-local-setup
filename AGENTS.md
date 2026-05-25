@@ -1,19 +1,21 @@
 # AGENTS.md
 
-> AI agents configuration for day-to-day developer and DevOps work.
-> Place this file in the project root or in `~/.config/agents/AGENTS.md` for a global scope.
+> AI agents configuration file for daily developer and DevOps work.
+> Place this file in the root directory of your project or in `~/.config/agents/AGENTS.md` for global scope.
 
 ---
 
-## Global rules (all agents)
+## Global Rules (All Agents)
 
-- Respond in Polish if the user asks in Polish; otherwise respond in English.
-- Always provide copy-paste-ready commands, not pseudocode.
-- Do not ask for confirmation for simple, reversible actions — act.
-- If an action is destructive (data deletion, production reset), always ask for confirmation.
-- Prefer solutions without external dependencies when practical.
-- Write code with no unnecessary comments — names should be self-explanatory.
-- Use the latest stable tool versions unless the project requires otherwise.
+- CRITICAL: You must ALWAYS communicate with me ONLY in Polish, regardless of the language used in the prompt.
+- CRITICAL: You are strictly forbidden from deleting the contents of this file or any other file without my explicit consent.
+- CRITICAL: You must perform reliable, thorough analysis. You are STRICTLY FORBIDDEN from returning fictitious, made-up, or guessed data (no hallucinations). If you are unsure about something, you must ask for clarification instead of guessing.
+- Always provide ready-to-copy commands, not pseudocode.
+- Do not ask for confirmation for simple, reversible actions — just do it.
+- If something is destructive (data deletion, production reset), always ask first.
+- Prefer solutions without external dependencies if possible.
+- Write code without unnecessary comments — names should speak for themselves.
+- Use the latest stable versions of tools unless the project requires otherwise.
 
 ---
 
@@ -21,21 +23,21 @@
 
 **Scope:** writing code, refactoring, debugging, code review, tests, API documentation.
 
-### Code style
+### Code Style
 - Default language: TypeScript (Node.js / React). Fallback: Python 3.12+.
 - Formatter: Prettier (TS/JS), Black (Python). Linter: ESLint / Ruff.
-- Naming: `camelCase` for variables/functions, `PascalCase` for classes/components, `SCREAMING_SNAKE_CASE` for environment constants.
-- Imports: prefer absolute paths over relative (`@/lib/...` instead of `../../lib/...`).
-- Error handling: use typed exceptions; never `catch(e) {}` without logging.
+- Naming: `camelCase` for variables/functions, `PascalCase` for classes/components, `SCREAMING_SNAKE_CASE` for environment variables.
+- Imports: absolute paths, not relative (`@/lib/...` instead of `../../lib/...`).
+- Error handling: always typed exceptions, never `catch(e) {}` without logging.
 - Tests: Vitest (TS), Pytest (Python). Minimum 80% coverage for business logic.
 
-### Typical tasks
-- New feature: define the interface/types first, implement, then write tests.
-- Bug fix: reproduce the bug with a test, fix it, ensure the test passes.
-- Refactor: do not change behavior, only structure. Confirm with tests.
-- Code review: focus on security, readability, performance, and edge cases.
+### Typical Tasks
+- **New feature:** first interfaces/types, then implementation, finally tests.
+- **Bug fix:** reproduce the bug with a test, fix it, make sure the test passes.
+- **Refactor:** do not change behavior, only structure. Confirm with tests.
+- **Code review:** pay attention to: security, readability, performance, edge cases.
 
-### Conventional commits
+### Commit Conventions (Conventional Commits)
 ```
 feat(scope): short description
 fix(scope): short description
@@ -45,12 +47,12 @@ test(scope): short description
 chore(scope): short description
 ```
 
-### Example requests
+### Example Prompts
 ```
 "Write a REST POST /users endpoint with Zod validation and error handling"
-"Refactor this React component — it's too large, split it into smaller parts"
+"Refactor this React component — it's too big, split it into smaller ones"
 "Write unit tests for the parseDate function"
-"Find a memory leak in this code and propose a fix"
+"Find the memory leak in this code and propose a fix"
 ```
 
 ---
@@ -59,19 +61,19 @@ chore(scope): short description
 
 **Scope:** Docker, Kubernetes, Terraform, CI/CD pipelines, monitoring, infrastructure security.
 
-### Default environment
+### Default Environment
 - Cloud: AWS (primary), GCP (secondary).
 - IaC: Terraform + Terragrunt.
-- Containers: Docker + Kubernetes (EKS / k3s for local).
+- Containers: Docker + Kubernetes (EKS / k3s locally).
 - CI/CD: GitHub Actions.
 - Monitoring: Prometheus + Grafana + Loki.
 - Secrets: HashiCorp Vault or AWS Secrets Manager.
 
-### Infrastructure principles
-- Infrastructure as code — no manual changes in production consoles.
-- Least privilege — minimal permissions for each service and user.
+### Infrastructure Rules
+- Infrastructure as code — nothing manually in the production console.
+- Least privilege — minimum permissions for each service and user.
 - Immutable infrastructure — do not patch running servers, replace images.
-- Everything inside a VPC; nothing public without a load balancer and WAF.
+- Everything in VPC, nothing public without a load balancer and WAF.
 - Multi-AZ for production, single-AZ for dev/staging.
 - Mandatory tags: `env`, `project`, `owner`, `cost-center`.
 
@@ -133,29 +135,29 @@ jobs:
         run: kubectl set image deployment/app app=$IMAGE_TAG
 ```
 
-### Example requests
+### Example Prompts
 ```
-"Write Terraform for an RDS PostgreSQL with multi-AZ and automatic backups"
+"Write Terraform for RDS PostgreSQL with multi-AZ and automatic backup"
 "Create a Helm chart for a Node.js service with HPA and PodDisruptionBudget"
-"Optimize this Dockerfile — it's 1.2GB, target <200MB"
+"Optimize this Dockerfile — it's 1.2GB now, I want it under 200MB"
 "Write Prometheus alerting rules for p99 latency > 500ms"
-"How to configure a k8s network policy so pod A only sees pod B?"
+"How to configure a network policy in k8s so pod A only sees pod B?"
 ```
 
 ---
 
 ## AGENT: shell — Terminal, scripts, automation
 
-**Scope:** Bash/Zsh scripts, automation, system administration, CLI tooling.
+**Scope:** Bash/Zsh scripts, automation, system management, CLI tools.
 
-### Script rules
-- Every script should start with `#!/usr/bin/env bash` and `set -euo pipefail`.
-- Always quote variables: `"$VAR"`, not `$VAR`.
-- Check dependencies at the script start (`command -v docker || exit 1`).
+### Script Rules
+- Every script starts with `#!/usr/bin/env bash` and `set -euo pipefail`.
+- Variables always in quotes: `"$VAR"`, not `$VAR`.
+- Check dependencies at the beginning of the script (`command -v docker || exit 1`).
 - Logging: `echo "[$(date +%T)] INFO: ..."` to stdout, errors to stderr.
-- Production scripts: provide a `--dry-run` flag for safe testing.
+- Production scripts: add a `--dry-run` flag for testing without side effects.
 
-### Standard script template
+### Standard Script Template
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -193,7 +195,7 @@ main() {
 main "$@"
 ```
 
-### Useful aliases (.bashrc / .zshrc)
+### Useful Aliases (.bashrc / .zshrc)
 ```bash
 # Git
 alias gs='git status'
@@ -220,45 +222,45 @@ alias myip='curl -s ifconfig.me'
 alias path='echo $PATH | tr ":" "\n"'
 ```
 
-### Example requests
+### Example Prompts
 ```
-"Write a script that backs up PostgreSQL to S3 and removes backups older than 30 days"
-"A disk-monitoring script — alert when usage > 85%"
+"Write a script that backups PostgreSQL to S3 and deletes backups older than 30 days"
+"Disk monitoring script — alert when > 85% full"
 "One-liner to find the 10 largest files in /var/log"
-"Write a deploy script that first health-checks the previous service"
+"Write a deploy script that first does a health check of the old service"
 ```
 
 ---
 
 ## AGENT: security — Security and hardening
 
-**Scope:** code audits, TLS/SSL configuration, secrets management, OWASP, CVE checks.
+**Scope:** code audit, TLS/SSL configuration, secrets management, OWASP, CVE.
 
-### Principles
+### Rules
 - Never commit secrets — use `git-secrets` or `gitleaks` in pre-commit.
-- Treat all external inputs as untrusted — validate on the server side.
-- Run dependency audits before each deploy: `npm audit`, `pip-audit`, `trivy`.
-- Rotate secrets every 90 days; rotate service credentials every 30 days.
-- Log all authentication and authorization events.
+- Treat all external inputs as untrusted — server-side validation always.
+- Dependency audit before every deploy: `npm audit`, `pip-audit`, `trivy`.
+- Rotate secrets every 90 days, service access every 30 days.
+- Log everything related to authentication and authorization.
 
-### Pre-deploy checklist
+### Pre-deploy Checklist
 ```
 [ ] npm audit / pip-audit — no HIGH/CRITICAL
-[ ] Trivy scan Docker image — no HIGH/CRITICAL
-[ ] Secrets are not in the repo (gitleaks)
-[ ] HTTPS everywhere, redirect HTTP to HTTPS
+[ ] Trivy Docker image scan — no HIGH/CRITICAL
+[ ] Secrets are not in code (gitleaks)
+[ ] HTTPS everywhere, HTTP redirect to HTTPS
 [ ] Security headers: CSP, HSTS, X-Frame-Options
 [ ] Rate limiting on auth endpoints
 [ ] Logs do not contain PII / passwords / tokens
-[ ] Backup restore tested
+[ ] Backup tested (restore test)
 ```
 
-### Example requests
+### Example Prompts
 ```
 "Review this code for SQL injection and XSS"
 "How to configure mTLS between services in k8s?"
-"Write an nginx config with strong security headers (A+ on SSL Labs)"
-"Find CVEs for this package version and suggest a safe upgrade"
+"Write an nginx config with good security headers (A+ on SSL Labs)"
+"Find CVEs for this package version and propose a safe version"
 ```
 
 ---
@@ -267,14 +269,14 @@ alias path='echo $PATH | tr ":" "\n"'
 
 **Scope:** log analysis, profiling, production debugging, postmortem.
 
-### Debugging approach
-1. **Reproduce** — reproduce the issue locally or in staging.
-2. **Isolate** — narrow down to the specific component, function, or query.
-3. **Hypothesis** — state a specific hypothesis before each change.
-4. **Change** — make one change at a time and measure the effect.
-5. **Document** — record root cause, fix, and prevention steps.
+### Debugging Approach
+1. **Reproduce** — reproduce the problem locally or in staging.
+2. **Isolate** — narrow down to a specific component, function, or query.
+3. **Hypothesis** — formulate a specific hypothesis before each change.
+4. **Change** — one change at a time, measure the effect.
+5. **Document** — what was the cause, how it was fixed, how to prevent it.
 
-### Useful diagnostic commands
+### Useful Diagnostic Commands
 ```bash
 # System logs
 journalctl -u SERVICE_NAME -f --since "10 min ago"
@@ -301,17 +303,17 @@ ORDER BY duration DESC;
 kill -USR2 <PID>   # requires --expose-gc
 ```
 
-### Example requests
+### Example Prompts
 ```
-"Analyze these nginx logs — find cause of 502 between 14:00 and 14:15"
-"Service has a memory leak — how to locate it in Node.js without restarting?"
-"CPU spike to 100% in production — give a step-by-step diagnostic plan"
-"Analyze this stack trace and explain possible causes"
+"Analyze these nginx logs — find what causes 502 between 14:00 and 14:15"
+"The service has a memory leak — how to locate it in Node.js without restart?"
+"CPU spike in production to 100% — give me a step-by-step diagnostic plan"
+"Analyze this stack trace and tell me what could have caused it"
 ```
 
 ---
 
-## Project context (fill for your repo)
+## Project Context (fill in for your repo)
 
 ```yaml
 project:
